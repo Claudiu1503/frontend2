@@ -2,8 +2,13 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
+import { CookiesProvider } from 'react-cookie'
 import './index.css'
 import App from './App.jsx'
+
+// Import i18n configuration
+import './i18n'
+import { LanguageProvider } from './contexts/LanguageContext'
 
 // Create a custom theme
 const theme = createTheme({
@@ -80,7 +85,11 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <App />
+      <CookiesProvider>
+        <LanguageProvider>
+          <App />
+        </LanguageProvider>
+      </CookiesProvider>
     </ThemeProvider>
   </StrictMode>,
 )

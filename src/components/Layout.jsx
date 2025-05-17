@@ -1,5 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Navbar from './Navbar';
 import { Box, Container, Grid, useTheme, useMediaQuery, Paper, Fade } from '@mui/material';
 
@@ -7,6 +8,7 @@ import { Box, Container, Grid, useTheme, useMediaQuery, Paper, Fade } from '@mui
 const Layout = () => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+  const { t } = useTranslation();
 
   return (
     <Box 
@@ -53,7 +55,7 @@ const Layout = () => {
       >
         <Container maxWidth="xl">
           <Box sx={{ textAlign: 'center' }}>
-            <p>© {new Date().getFullYear()} Movie Management System</p>
+            <p>© {new Date().getFullYear()} {t('common.appName')}</p>
           </Box>
         </Container>
       </Box>

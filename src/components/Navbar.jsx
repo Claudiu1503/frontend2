@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 import UserType from '../utils/userTypes';
 
 // Material UI imports
@@ -41,17 +43,21 @@ import {
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
   Logout as LogoutIcon,
-  TheaterComedy as CastIcon
+  TheaterComedy as CastIcon,
+  Language as LanguageIcon
 } from '@mui/icons-material';
 
 const Navbar = () => {
   const { currentUser, logout } = useAuth();
+  const { currentLanguage, languages, changeLanguage } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [languageMenuAnchorEl, setLanguageMenuAnchorEl] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // Get current active path
@@ -76,6 +82,20 @@ const Navbar = () => {
   const handleProfile = () => {
     // Navigate to profile page (to be implemented)
     handleClose();
+  };
+
+  // Language menu handlers
+  const handleLanguageMenuOpen = (event) => {
+    setLanguageMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleLanguageMenuClose = () => {
+    setLanguageMenuAnchorEl(null);
+  };
+
+  const handleLanguageChange = (languageCode) => {
+    changeLanguage(languageCode);
+    handleLanguageMenuClose();
   };
 
   const handleDrawerToggle = () => {
@@ -106,7 +126,7 @@ const Navbar = () => {
 
     const commonItems = [
       {
-        text: 'Dashboard',
+        text: t('navigation.dashboard'),
         icon: <DashboardIcon />,
         path: dashboardPath,
         active: isActive(dashboardPath)
@@ -118,25 +138,25 @@ const Navbar = () => {
         return [
           ...commonItems,
           {
-            text: 'Movies',
+            text: t('navigation.movies'),
             icon: <MovieIcon />,
             path: '/movies',
             active: isActive('/movies')
           },
           {
-            text: 'Add Movie',
+            text: t('navigation.addMovie'),
             icon: <AddIcon />,
             path: '/movies/new',
             active: isActive('/movies/new')
           },
           {
-            text: 'Casts',
+            text: t('navigation.casts'),
             icon: <CastIcon />,
             path: '/casts',
             active: isActive('/casts')
           },
           {
-            text: 'Export',
+            text: t('common.export'),
             icon: <ExportIcon />,
             path: '/movies/export',
             active: isActive('/movies/export')
@@ -146,31 +166,31 @@ const Navbar = () => {
         return [
           ...commonItems,
           {
-            text: 'Movies',
+            text: t('navigation.movies'),
             icon: <MovieIcon />,
             path: '/manager/movies',
             active: isActive('/manager/movies')
           },
           {
-            text: 'Members',
+            text: t('navigation.members'),
             icon: <PersonIcon />,
             path: '/members',
             active: isActive('/members')
           },
           {
-            text: 'Casts',
+            text: t('navigation.casts'),
             icon: <CastIcon />,
             path: '/casts',
             active: isActive('/casts')
           },
           {
-            text: 'Statistics',
+            text: t('navigation.statistics'),
             icon: <BarChartIcon />,
             path: '/manager/stats',
             active: isActive('/manager/stats')
           },
           {
-            text: 'Export',
+            text: t('common.export'),
             icon: <ExportIcon />,
             path: '/movies/export',
             active: isActive('/movies/export')
@@ -180,13 +200,13 @@ const Navbar = () => {
         return [
           ...commonItems,
           {
-            text: 'Users',
+            text: t('navigation.users'),
             icon: <PeopleIcon />,
             path: '/admin/users',
             active: isActive('/admin/users')
           },
           {
-            text: 'Add User',
+            text: t('navigation.addUser'),
             icon: <AddIcon />,
             path: '/admin/users/new',
             active: isActive('/admin/users/new')
@@ -211,7 +231,7 @@ const Navbar = () => {
         }}
       >
         <Typography variant="h6" noWrap component="div">
-          Menu
+          {t('common.appName')}
         </Typography>
         <IconButton color="inherit" onClick={handleDrawerToggle}>
           <ChevronLeftIcon />
@@ -249,7 +269,7 @@ const Navbar = () => {
           <ListItemIcon>
             <LogoutIcon />
           </ListItemIcon>
-          <ListItemText primary="Logout" />
+          <ListItemText primary={t('auth.logout')} />
         </ListItem>
       </List>
     </Box>
@@ -307,7 +327,7 @@ const Navbar = () => {
                 letterSpacing: '0.5px'
               }}
             >
-              Movie Management System
+              {t('common.appName')}
             </Typography>
 
             {/* Desktop navigation links */}
@@ -413,13 +433,19 @@ const Navbar = () => {
                     <ListItemIcon>
                       <AccountCircle fontSize="small" />
                     </ListItemIcon>
-                    Profile
+                    {t('auth.profile')}
+                  </MenuItem>
+                  <MenuItem onClick={handleLanguageMenuOpen}>
+                    <ListItemIcon>
+                      <LanguageIcon fontSize="small" />
+                    </ListItemIcon>
+                    {t('auth.language')}
                   </MenuItem>
                   <MenuItem onClick={handleLogout}>
                     <ListItemIcon>
                       <LogoutIcon fontSize="small" />
                     </ListItemIcon>
-                    Logout
+                    {t('auth.logout')}
                   </MenuItem>
                 </Menu>
               </Box>
@@ -440,12 +466,42 @@ const Navbar = () => {
                   }
                 }}
               >
-                Login
+                {t('auth.signIn')}
               </Button>
             )}
           </Toolbar>
         </Container>
       </AppBar>
+
+      {/* Language Menu */}
+      <Menu
+        id="language-menu"
+        anchorEl={languageMenuAnchorEl}
+        keepMounted
+        open={Boolean(languageMenuAnchorEl)}
+        onClose={handleLanguageMenuClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        {languages.map((lang) => (
+          <MenuItem 
+            key={lang.code} 
+            onClick={() => handleLanguageChange(lang.code)}
+            selected={currentLanguage === lang.code}
+          >
+            <ListItemIcon>
+              {currentLanguage === lang.code && <Chip size="small" label="✓" color="primary" />}
+            </ListItemIcon>
+            {t(`auth.${lang.code === 'en' ? 'english' : lang.code === 'es' ? 'spanish' : 'romanian'}`)}
+          </MenuItem>
+        ))}
+      </Menu>
 
       {/* Mobile drawer */}
       {currentUser && (
