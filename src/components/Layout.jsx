@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
-import { Box, Container, Paper, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Container, Grid, useTheme, useMediaQuery, Paper, Fade } from '@mui/material';
 
 // Layout component that wraps all pages with a consistent structure
 const Layout = () => {
@@ -9,44 +9,49 @@ const Layout = () => {
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <Box 
+      sx={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        minHeight: '100vh',
+        backgroundColor: theme.palette.background.default
+      }}
+    >
       {/* Navigation bar */}
       <Navbar />
 
       {/* Main content */}
-      <Container 
+      <Box 
         component="main" 
-        maxWidth={isDesktop ? "xl" : "lg"}
+        className="animate-fade-in"
         sx={{ 
           flexGrow: 1, 
-          py: 3,
-          px: isDesktop ? 4 : 2
+          transition: 'all var(--animation-duration) var(--animation-timing)'
         }}
       >
-        <Paper 
-          elevation={3} 
-          sx={{ 
-            p: isDesktop ? 4 : 3,
-            borderRadius: 2,
-            boxShadow: isDesktop ? '0 8px 24px rgba(0, 0, 0, 0.12)' : 3
-          }}
-        >
-          <Outlet />
-        </Paper>
-      </Container>
+        <Container maxWidth="xl" disableGutters>
+          <Fade in={true} timeout={500}>
+            <Box>
+              <Outlet />
+            </Box>
+          </Fade>
+        </Container>
+      </Box>
 
       {/* Footer */}
       <Box 
         component="footer" 
         sx={{ 
           py: 3, 
-          bgcolor: 'background.paper', 
+          bgcolor: theme.palette.primary.main, 
+          color: 'white',
           mt: 'auto',
           borderTop: '1px solid',
-          borderColor: 'divider'
+          borderColor: 'divider',
+          boxShadow: '0 -4px 10px rgba(0, 0, 0, 0.05)'
         }}
       >
-        <Container maxWidth={isDesktop ? "xl" : "lg"}>
+        <Container maxWidth="xl">
           <Box sx={{ textAlign: 'center' }}>
             <p>© {new Date().getFullYear()} Movie Management System</p>
           </Box>

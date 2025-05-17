@@ -242,7 +242,7 @@ const MovieForm = () => {
                 >
                   <MenuItem value="">Select Type</MenuItem>
                   {Object.values(Type).map(type => (
-                    <MenuItem key={type} value={type}>{type}</MenuItem>
+                    <MenuItem key={type} value={type} sx={{ width: '100%', whiteSpace: 'normal' }}>{type}</MenuItem>
                   ))}
                 </Select>
                 {formErrors.type && (
@@ -264,7 +264,7 @@ const MovieForm = () => {
                 >
                   <MenuItem value="">Select Category</MenuItem>
                   {Object.values(Category).map(category => (
-                    <MenuItem key={category} value={category}>{category}</MenuItem>
+                    <MenuItem key={category} value={category} sx={{ width: '100%', whiteSpace: 'normal' }}>{category}</MenuItem>
                   ))}
                 </Select>
                 {formErrors.category && (

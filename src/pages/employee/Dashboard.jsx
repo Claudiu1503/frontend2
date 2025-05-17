@@ -42,14 +42,14 @@ const EmployeeDashboard = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Get all films to count total
         const films = await filmService.getAllFilms();
-        
+
         // Get statistics by category and year
         const categoryStats = await filmService.getFilmCountByCategory();
         const yearStats = await filmService.getFilmCountPerYear();
-        
+
         setStats({
           totalMovies: films.length,
           byCategory: categoryStats,
@@ -94,13 +94,13 @@ const EmployeeDashboard = () => {
       <Typography variant="h4" gutterBottom>
         Employee Dashboard
       </Typography>
-      
+
       <Typography variant="subtitle1" gutterBottom>
         Welcome back, {currentUser.username}!
       </Typography>
-      
+
       <Divider sx={{ my: 2 }} />
-      
+
       <Grid container spacing={3}>
         {/* Quick actions card */}
         <Grid item xs={12} md={6}>
@@ -140,20 +140,6 @@ const EmployeeDashboard = () => {
                 </ListItem>
                 <ListItem>
                   <ListItemIcon>
-                    <BarChartIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="View statistics" />
-                  <Button 
-                    variant="outlined" 
-                    size="small" 
-                    component={Link} 
-                    to="/movies/stats"
-                  >
-                    Stats
-                  </Button>
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon>
                     <DownloadIcon />
                   </ListItemIcon>
                   <ListItemText primary="Export movies" />
@@ -170,69 +156,7 @@ const EmployeeDashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-        
-        {/* Statistics card */}
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Movie Statistics
-              </Typography>
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="body1">
-                  Total Movies: <strong>{stats.totalMovies}</strong>
-                </Typography>
-              </Box>
-              
-              <Typography variant="subtitle2" gutterBottom>
-                Top Categories:
-              </Typography>
-              <List dense>
-                {Object.entries(stats.byCategory)
-                  .sort((a, b) => b[1] - a[1])
-                  .slice(0, 5)
-                  .map(([category, count]) => (
-                    <ListItem key={category}>
-                      <ListItemIcon>
-                        <MovieIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText 
-                        primary={`${category}: ${count} movies`} 
-                      />
-                    </ListItem>
-                  ))}
-              </List>
-              
-              <Typography variant="subtitle2" gutterBottom sx={{ mt: 2 }}>
-                Recent Years:
-              </Typography>
-              <List dense>
-                {Object.entries(stats.byYear)
-                  .sort((a, b) => b[0] - a[0])
-                  .slice(0, 5)
-                  .map(([year, count]) => (
-                    <ListItem key={year}>
-                      <ListItemIcon>
-                        <MovieIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText 
-                        primary={`${year}: ${count} movies`} 
-                      />
-                    </ListItem>
-                  ))}
-              </List>
-            </CardContent>
-            <CardActions>
-              <Button 
-                size="small" 
-                component={Link} 
-                to="/movies/stats"
-              >
-                View All Statistics
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
+
       </Grid>
     </Box>
   );

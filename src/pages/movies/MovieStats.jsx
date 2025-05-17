@@ -40,7 +40,7 @@ const MovieStats = () => {
   const { currentUser, hasRole } = useAuth();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
-  
+
   // Redirect if not a manager
   useEffect(() => {
     if (currentUser && !hasRole(UserType.MANAGER)) {
@@ -62,14 +62,14 @@ const MovieStats = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Get all films to count total
         const films = await filmService.getAllFilms();
-        
+
         // Get statistics by category and year
         const categoryStats = await filmService.getFilmCountByCategory();
         const yearStats = await filmService.getFilmCountPerYear();
-        
+
         setStats({
           totalMovies: films.length,
           byCategory: categoryStats,
@@ -139,7 +139,7 @@ const MovieStats = () => {
           <Typography variant="h6">
             Total Movies: <strong>{stats.totalMovies}</strong>
           </Typography>
-          
+
           <ToggleButtonGroup
             value={chartType}
             exclusive
@@ -162,128 +162,124 @@ const MovieStats = () => {
         <Grid container spacing={4}>
           {/* Category Statistics */}
           <Grid item xs={12} md={6}>
-            <Card sx={{ height: '100%' }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom align="center">
-                  Movies by Category
-                </Typography>
-                <Box sx={{ height: 400, mt: 2 }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    {chartType === 'bar' ? (
-                      <BarChart
+            <Box sx={{ height: '100%', p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
+              <Typography variant="h6" gutterBottom align="center">
+                Movies by Category
+              </Typography>
+              <Box sx={{ height: 400, mt: 2 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  {chartType === 'bar' ? (
+                    <BarChart
+                      data={categoryData}
+                      margin={{ top: 5, right: 30, left: 20, bottom: 70 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis 
+                        dataKey="name" 
+                        angle={-45} 
+                        textAnchor="end" 
+                        height={70}
+                        interval={0}
+                      />
+                      <YAxis />
+                      <Tooltip 
+                        formatter={(value) => [`${value} movies`, 'Count']}
+                        labelFormatter={(label) => `Category: ${label}`}
+                      />
+                      <Legend />
+                      <Bar 
+                        dataKey="value" 
+                        name="Movies" 
+                        fill={theme.palette.primary.main}
+                        animationDuration={1500}
+                      />
+                    </BarChart>
+                  ) : (
+                    <PieChart>
+                      <Pie
                         data={categoryData}
-                        margin={{ top: 5, right: 30, left: 20, bottom: 70 }}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={true}
+                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                        outerRadius={150}
+                        fill="#8884d8"
+                        dataKey="value"
+                        nameKey="name"
+                        animationDuration={1500}
                       >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis 
-                          dataKey="name" 
-                          angle={-45} 
-                          textAnchor="end" 
-                          height={70}
-                          interval={0}
-                        />
-                        <YAxis />
-                        <Tooltip 
-                          formatter={(value) => [`${value} movies`, 'Count']}
-                          labelFormatter={(label) => `Category: ${label}`}
-                        />
-                        <Legend />
-                        <Bar 
-                          dataKey="value" 
-                          name="Movies" 
-                          fill={theme.palette.primary.main}
-                          animationDuration={1500}
-                        />
-                      </BarChart>
-                    ) : (
-                      <PieChart>
-                        <Pie
-                          data={categoryData}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={true}
-                          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                          outerRadius={150}
-                          fill="#8884d8"
-                          dataKey="value"
-                          nameKey="name"
-                          animationDuration={1500}
-                        >
-                          {categoryData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </Pie>
-                        <Tooltip 
-                          formatter={(value) => [`${value} movies`, 'Count']}
-                          labelFormatter={(label) => `Category: ${label}`}
-                        />
-                        <Legend />
-                      </PieChart>
-                    )}
-                  </ResponsiveContainer>
-                </Box>
-              </CardContent>
-            </Card>
+                        {categoryData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        formatter={(value) => [`${value} movies`, 'Count']}
+                        labelFormatter={(label) => `Category: ${label}`}
+                      />
+                      <Legend />
+                    </PieChart>
+                  )}
+                </ResponsiveContainer>
+              </Box>
+            </Box>
           </Grid>
 
           {/* Year Statistics */}
           <Grid item xs={12} md={6}>
-            <Card sx={{ height: '100%' }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom align="center">
-                  Movies by Year
-                </Typography>
-                <Box sx={{ height: 400, mt: 2 }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    {chartType === 'bar' ? (
-                      <BarChart
+            <Box sx={{ height: '100%', p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
+              <Typography variant="h6" gutterBottom align="center">
+                Movies by Year
+              </Typography>
+              <Box sx={{ height: 400, mt: 2 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  {chartType === 'bar' ? (
+                    <BarChart
+                      data={yearData}
+                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip 
+                        formatter={(value) => [`${value} movies`, 'Count']}
+                        labelFormatter={(label) => `Year: ${label}`}
+                      />
+                      <Legend />
+                      <Bar 
+                        dataKey="value" 
+                        name="Movies" 
+                        fill={theme.palette.secondary.main}
+                        animationDuration={1500}
+                      />
+                    </BarChart>
+                  ) : (
+                    <PieChart>
+                      <Pie
                         data={yearData}
-                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={true}
+                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                        outerRadius={150}
+                        fill="#8884d8"
+                        dataKey="value"
+                        nameKey="name"
+                        animationDuration={1500}
                       >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip 
-                          formatter={(value) => [`${value} movies`, 'Count']}
-                          labelFormatter={(label) => `Year: ${label}`}
-                        />
-                        <Legend />
-                        <Bar 
-                          dataKey="value" 
-                          name="Movies" 
-                          fill={theme.palette.secondary.main}
-                          animationDuration={1500}
-                        />
-                      </BarChart>
-                    ) : (
-                      <PieChart>
-                        <Pie
-                          data={yearData}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={true}
-                          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                          outerRadius={150}
-                          fill="#8884d8"
-                          dataKey="value"
-                          nameKey="name"
-                          animationDuration={1500}
-                        >
-                          {yearData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </Pie>
-                        <Tooltip 
-                          formatter={(value) => [`${value} movies`, 'Count']}
-                          labelFormatter={(label) => `Year: ${label}`}
-                        />
-                        <Legend />
-                      </PieChart>
-                    )}
-                  </ResponsiveContainer>
-                </Box>
-              </CardContent>
-            </Card>
+                        {yearData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        formatter={(value) => [`${value} movies`, 'Count']}
+                        labelFormatter={(label) => `Year: ${label}`}
+                      />
+                      <Legend />
+                    </PieChart>
+                  )}
+                </ResponsiveContainer>
+              </Box>
+            </Box>
           </Grid>
         </Grid>
       </Paper>

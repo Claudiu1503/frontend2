@@ -357,7 +357,7 @@ const MovieList = () => {
                 >
                   <MenuItem value="">All</MenuItem>
                   {Object.values(Type).map(type => (
-                    <MenuItem key={type} value={type}>{type}</MenuItem>
+                    <MenuItem key={type} value={type} sx={{ width: '100%', whiteSpace: 'normal' }}>{type}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -373,7 +373,7 @@ const MovieList = () => {
                 >
                   <MenuItem value="">All</MenuItem>
                   {Object.values(Category).map(category => (
-                    <MenuItem key={category} value={category}>{category}</MenuItem>
+                    <MenuItem key={category} value={category} sx={{ width: '100%', whiteSpace: 'normal' }}>{category}</MenuItem>
                   ))}
                 </Select>
               </FormControl>

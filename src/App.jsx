@@ -30,6 +30,17 @@ import MemberList from './pages/members/MemberList';
 import MemberForm from './pages/members/MemberForm';
 import MemberDetails from './pages/members/MemberDetails';
 
+// Cast Pages
+import CastList from './pages/casts/CastList';
+import CastForm from './pages/casts/CastForm';
+import CastDetails from './pages/casts/CastDetails';
+
+// Admin Pages
+import AdminDashboard from './pages/admin/Dashboard';
+import UserList from './pages/admin/UserList';
+import UserForm from './pages/admin/UserForm';
+import UserDetails from './pages/admin/UserDetails';
+
 // Styles
 import './App.css';
 
@@ -46,18 +57,27 @@ function App() {
             {/* Protected Routes */}
             <Route element={<Layout />}>
               {/* Employee Routes */}
-              <Route element={<ProtectedRoute allowedRoles={[UserType.EMPLOYEE, UserType.ADMIN]} />}>
+              <Route element={<ProtectedRoute allowedRoles={[UserType.EMPLOYEE]} />}>
                 <Route path="/employee" element={<EmployeeDashboard />} />
                 <Route path="/movies" element={<MovieList />} />
                 <Route path="/movies/new" element={<MovieForm />} />
                 <Route path="/movies/edit/:id" element={<MovieForm />} />
+                {/* Cast routes with CRUD access */}
+                <Route path="/casts/new" element={<CastForm />} />
+                <Route path="/casts/edit/:id" element={<CastForm />} />
               </Route>
 
-              {/* Common Routes (accessible by all authenticated users) */}
-              <Route element={<ProtectedRoute allowedRoles={[UserType.EMPLOYEE, UserType.MANAGER, UserType.ADMIN]} />}>
+              {/* Common Routes (accessible by employees and managers) */}
+              <Route element={<ProtectedRoute allowedRoles={[UserType.EMPLOYEE, UserType.MANAGER]} />}>
                 <Route path="/movies/view/:id" element={<MovieDetails />} />
                 <Route path="/movies/export" element={<ExportMovies />} />
+                {/* Cast routes with read-only access */}
+                <Route path="/casts" element={<CastList />} />
+                <Route path="/casts/view/:id" element={<CastDetails />} />
               </Route>
+
+              {/* Redirect /movies/stats to appropriate page based on user role */}
+              <Route path="/movies/stats" element={<Navigate to="/manager/stats" replace />} />
 
               {/* Manager Routes */}
               <Route element={<ProtectedRoute allowedRoles={[UserType.MANAGER]} />}>
@@ -73,8 +93,11 @@ function App() {
 
               {/* Admin Routes */}
               <Route element={<ProtectedRoute allowedRoles={[UserType.ADMIN]} />}>
-                <Route path="/admin" element={<Navigate to="/employee" replace />} />
-                {/* Add admin-specific routes here */}
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/users" element={<UserList />} />
+                <Route path="/admin/users/new" element={<UserForm />} />
+                <Route path="/admin/users/edit/:id" element={<UserForm />} />
+                <Route path="/admin/users/view/:id" element={<UserDetails />} />
               </Route>
             </Route>
 
