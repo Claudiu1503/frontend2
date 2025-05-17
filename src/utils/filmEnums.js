@@ -1,0 +1,26 @@
+// Film type enum
+export const Type = {
+  ARTISTIC: 'ARTISTIC',
+  SERIES: 'SERIES'
+};
+
+// Film category enum
+export const Category = {
+  ACTION: 'ACTION',
+  COMEDY: 'COMEDY',
+  DRAMA: 'DRAMA',
+  HORROR: 'HORROR',
+  THRILLER: 'THRILLER',
+  ROMANCE: 'ROMANCE',
+  SCIFI: 'SCIFI',
+  FANTASY: 'FANTASY',
+  DOCUMENTARY: 'DOCUMENTARY',
+  ANIMATION: 'ANIMATION',
+  ADVENTURE: 'ADVENTURE',
+  MYSTERY: 'MYSTERY',
+  CRIME: 'CRIME',
+  FAMILY: 'FAMILY',
+  MUSICAL: 'MUSICAL',
+  WAR: 'WAR',
+  WESTERN: 'WESTERN'
+};
